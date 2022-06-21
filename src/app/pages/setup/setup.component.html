@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-lg-6">
+    <nb-card>
+      <nb-card-body>
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+        <div class="form-control-group">
+            <label class="label" for="input-name">Foto:</label>
+            <input type="file" id="fc_isi_1" (change)="onSelectedFile($event)" />
+                  <div [innerHTML]="uploadError" class="error"></div>
+                  <div *ngIf="imagePath">
+                    <br />
+                    <img [src]="imagePath" width="100px">
+                  </div>
+        </div>
+
+        <div class="form-control-group">
+            <label class="label" for="input-email">Telp:</label>
+            <input type="text"
+                nbInput
+                fullWidth
+                formControlName="fc_isi_2"
+                >
+        </div>
+        <div class="form-control-group">
+          <label class="label" for="input-email">EMAIL:</label>
+          <input type="text"
+              nbInput
+              fullWidth
+              formControlName="fc_isi_3"
+              >
+        </div>
+        <div class="form-control-group">
+          <label class="label" for="input-email">ALAMAT:</label>
+          <input type="text"
+              nbInput
+              fullWidth
+              formControlName="fc_isi_4"
+              >
+        </div>
+        <div class="form-control-group">
+          <label class="label" for="input-email">TENTANG:</label>
+          <input type="text"
+              nbInput
+              fullWidth
+              formControlName="fc_isi_5"
+              >
+        </div>
+        <div class="form-control-group">
+          <label class="label" for="input-email">KONTAK:</label>
+          <input type="text"
+              nbInput
+              fullWidth
+              formControlName="fc_isi_6"
+              >
+        </div>
+       <br /><br />
+
+       <button nbButton
+          status="success"
+          size="large"
+          [nbSpinner]="simpanLoading"
+          nbSpinnerStatus="danger"
+              >
+        Update
+        <div *ngIf="!simpanLoading">
+
+        </div>
+      </button>
+      </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

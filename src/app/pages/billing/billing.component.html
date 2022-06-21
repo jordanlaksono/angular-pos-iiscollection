@@ -1,0 +1,164 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Filter Tanggal</nb-card-header>
+      <nb-card-body>
+        <form class="form-inline">
+          <div class="col-md-5"> <input type="date" [(ngModel)]="tglAwal" name="tglAwal" nbInput fullWidth placeholder="Masukan Tanggal Awal"  ></div>
+          <div class="col-md-5"> <input type="date" [(ngModel)]="tglAkhir" name="tglAkhir" nbInput fullWidth placeholder="Masukan Tanggal Akhir" ></div>
+
+          <div class="col-md-2"> <button (click)="cari()" nbButton status="primary">Filter</button></div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+        <span class="edit" >
+          <button
+          *ngIf="c"
+          nbButton
+          (click)="openModalBilling()"
+          >Bayar</button>
+        </span>
+        <br /><br />
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>No BPB</th>
+              <th>Date</th>
+              <th>Qty Total</th>
+              <th>Qty Retur</th>
+              <th>Total</th>
+              <th>Supplier</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="BpbAll?.length != 0">
+              <tr *ngFor="let po of BpbAll; let i = index">
+              	  <td> <input type="radio" [id]="'P-' + po.fc_nobpb" [value]="po" [(ngModel)]="billingAllUi"><label [for]="'P-' + po.fc_nobpb"></label></td>	
+                  <td> {{ po.fc_nobpb }}</td>
+                  <td>{{ po.tanggal }}</td>
+                  <td>{{ po.fn_qtytot }}</td>
+                  <td>{{ po.fn_qtyretur }}</td>
+                  <td>{{ po.fm_total }}</td>
+                  <td>{{ po.fv_nama }}</td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="BpbAll?.length == 0">
+            <tr>
+              <td colspan="7" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div *ngIf="isPopup"  style="position: absolute; top: 14vh; left: 37%; width: 41%; height: 83vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Payment</nb-card-header>
+    <nb-card-body>
+    	<div class="row show-grid">
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Tanggal Input</label>
+                      <div class="col-sm-6">
+                        <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="tanggal" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Tanggal BPB</label>
+                      <div class="col-sm-6">
+                        <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="tgl_bpb" autocomplete="off">
+                        <input type="hidden" nbInput fullWidth id="inputEmail1" [(ngModel)]="fd_tglbpbp" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label">No BPB</label>
+                      <div class="col-sm-7">
+                        <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="no_bpb" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                   <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Supplier</label>
+                      <div class="col-sm-8">
+                        <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="supplier" autocomplete="off">
+                        <input type="hidden" nbInput fullWidth id="inputEmail1" [(ngModel)]="kode_supplier" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                   <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Doc. No</label>
+                      <div class="col-sm-8">
+                        <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="KodeBilling" [value]="KodeBilling" autocomplete="off">
+                      </div>
+                    </div>
+                  </div>
+                   <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Cara Bayar</label>
+                      <div class="col-sm-8">
+                        <nb-select fullWidth placeholder="Pilih Cara Bayar" [(ngModel)]="jenisPembayaran">
+	                      <nb-option value="C">Cash</nb-option>
+	                      <nb-option value="D">Debit</nb-option>
+	                    </nb-select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Debet Pada Rekening</label>
+                      <div class="col-sm-8">
+                        <nb-select fullWidth placeholder="Pilih Cara Bayar" [(ngModel)]="jenisKeuangan">
+	                      <nb-option value="null">-- Pilih Keuangan --</nb-option>
+	                      <nb-option *ngFor="let k of dataBankUi; let i = index" [value]="k">{{k.nama_keuangan}}</nb-option>
+	                    </nb-select>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label" style="background-color: green;color: #fff;">Jumlah Hutang RP.</label>
+                      <div class="col-sm-8">
+                        <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="dpp" autocomplete="off" style="background-color: red;color: #fff;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label" style="background-color: green;color: #fff;">Bayar RP.</label>
+                      <div class="col-sm-8">
+                        <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="bayar" autocomplete="off" style="background-color: red;color: #fff;">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-4 col-form-label"></label>
+                        <div class="col-sm-8">
+                          <button
+                          *ngIf="c"
+                          nbButton
+                          (click)="simpanData()"
+                          [nbSpinner]="simpanLoading" nbSpinnerStatus="danger" nbSpinnerSize="large" nbSpinnerMessage="Loading...."
+                          >Simpan</button>
+                        </div>
+                    </div> 
+                  </div>
+        </div>          
+    </nb-card-body>
+  </nb-card>
+</div>    	

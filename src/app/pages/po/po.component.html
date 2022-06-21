@@ -1,0 +1,347 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Filter Tanggal</nb-card-header>
+      <nb-card-body>
+        <form class="form-inline">
+          <div class="col-md-5"> <input type="date" [(ngModel)]="tglAwal" name="tglAwal" nbInput fullWidth placeholder="Masukan Tanggal Awal"  ></div>
+          <div class="col-md-5"> <input type="date" [(ngModel)]="tglAkhir" name="tglAkhir" nbInput fullWidth placeholder="Masukan Tanggal Akhir" ></div>
+
+          <div class="col-md-2"> <button (click)="cari()" nbButton status="primary">Filter</button></div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+        <span class="edit" >
+          <button
+          *ngIf="c"
+          nbButton
+          (click)="openModalPo()"
+          >Tambah</button>
+        </span>
+        <br /><br />
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Kode Po</th>
+              <th>Date</th>
+              <th>Supplier</th>
+              <th>Area</th>
+              <th>Divisi</th>
+              <th>Total Qty</th>
+              <th>Total Biaya</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="poAll?.length != 0">
+              <tr *ngFor="let po of poAll; let i = index">
+                  <td>{{ po.fc_nopo }}</td>
+                  <td>{{ po.tanggal }}</td>
+                  <td>{{ po.fv_nama }}</td>
+                  <td>{{ po.fv_nmarea }}</td>
+                  <td>{{ po.fv_nmdivisi }}</td>
+                  <td>{{ po.fn_totqty }}</td>
+                  <td>{{ po.fm_total }}</td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="poAll?.length == 0">
+            <tr>
+              <td colspan="7" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div *ngIf="isPopup"  style="position: absolute; top: 14vh; left: 1%; width: 98%; height: 83vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Form Input Po</nb-card-header>
+		<nb-card-body >
+	     	<div class="row">
+			  <div class="col-lg-6">
+			    <nb-card>
+			      <nb-card-header>Supplier</nb-card-header>
+			      <nb-card-body>
+			      	 <div class="row show-grid">
+				        <div class="col-md-12">
+				          <div class="form-group row">
+				            <label for="inputEmail1" class="label col-sm-4 col-form-label">Kode Supplier</label>
+				            <div class="col-sm-6">
+				              <input type="text" nbInput fullWidth id="inputEmail1" [value]="suppliere?.fc_kdsupp? suppliere?.fc_kdsupp : '-'" (click)="openModalSupplier()">
+				            </div>
+				          </div>
+				          <div class="form-group row">
+				            <label for="inputEmail1" class="label col-sm-4 col-form-label">Nama</label>
+				            <div class="col-sm-8">
+				              <input type="text" nbInput fullWidth id="inputEmail1" [value]="suppliere?.fv_nama? suppliere?.fv_nama : '-'" >
+				            </div>
+				          </div>
+				          <div class="form-group row">
+				            <label for="inputEmail1" class="label col-sm-4 col-form-label">Alamat</label>
+				            <div class="col-sm-8">
+				              <input type="text" nbInput fullWidth id="inputEmail1" [value]="suppliere?.fv_alamat? suppliere?.fv_alamat : '-'" >
+				            </div>
+				          </div>
+				          <div class="form-group row">
+				            <label for="inputEmail1" class="label col-sm-4 col-form-label">Kota</label>
+				            <div class="col-sm-8">
+				              <input type="text" nbInput fullWidth id="inputEmail1" [value]="suppliere?.fc_kota? suppliere?.fc_kota : '-'" >
+				            </div>
+				          </div>
+				        </div>
+				     </div>     
+			      </nb-card-body>
+			    </nb-card>
+			  </div>
+			  <div class="col-lg-6">
+			    <nb-card>
+			      <nb-card-header>Po</nb-card-header>
+			      <nb-card-body>
+			      	<div class="row show-grid">
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">No PO</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="KodePo" [value]="KodePo">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Area</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="fc_kdarea" [value]="fc_kdarea">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Tanggal Kirim</label>
+					            <div class="col-sm-8">
+					              <input type="date" nbInput fullWidth id="inputEmail1" [(ngModel)]="tglKirim">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Divisi</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="fc_kddivisi" [value]="fc_kddivisi">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Operator</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="nama_operator" [value]="nama_operator">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Total Qty</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="total_qty">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Total Po</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="total_po">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Tax</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="tax">
+					            </div>
+					          </div>
+					        </div>
+				    </div>      
+			      </nb-card-body>
+			    </nb-card>
+			  </div>
+			  <div class="col-lg-12">
+			  	<nb-card>
+			      <nb-card-header>Input Detail PO</nb-card-header>
+			      <nb-card-body>
+			      		<div class="row show-grid">
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Kode Stock</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [value]="barange?.fc_kdstock? barange?.fc_kdstock : '-'" (click)="openModalBarang()" [(ngModel)]="fc_kdstock" autocomplete="off">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Qty</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="fn_qty" autocomplete="off">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Nama Stock</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [value]="barange?.fv_namastock? barange?.fv_namastock : '-'" [(ngModel)]="fv_namastock">
+					              <input type="hidden" nbInput fullWidth id="inputEmail1" [value]="barange?.fc_kdtipe? barange?.fc_kdtipe : '-'" [(ngModel)]="fc_kdtipe">
+					              <input type="hidden" nbInput fullWidth id="inputEmail1" [value]="barange?.fc_kdbrand? barange?.fc_kdbrand : '-'" [(ngModel)]="fc_kdbrand">
+					              <input type="hidden" nbInput fullWidth id="inputEmail1" [value]="barange?.fc_kdgroup? barange?.fc_kdgroup : '-'" [(ngModel)]="fc_kdgroup">
+					              <input type="hidden" nbInput fullWidth id="inputEmail1" [value]="barange?.fc_kdsatuan? barange?.fc_kdsatuan : '-'" [(ngModel)]="fc_kdsatuan">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Price</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [(ngModel)]="fm_price" autocomplete="off">
+					            </div>
+					          </div>
+					        </div>
+					        <div class="col-md-6">
+					        	<div class="form-group row">
+					        		<label for="inputEmail1" class="label col-sm-4 col-form-label"></label>
+						            <div class="col-sm-8">
+						             	<button
+								          *ngIf="c"
+								          nbButton
+								          (click)="tambahData()"
+								          >Tambahkan</button>
+						            </div>
+					        	</div> 
+					        </div>
+					        <div class="col-md-6">
+					          <div class="form-group row">
+					            <label for="inputEmail1" class="label col-sm-4 col-form-label">Total</label>
+					            <div class="col-sm-8">
+					              <input type="text" nbInput fullWidth id="inputEmail1" [value]="fm_price * fn_qty" [(ngModel)]="fm_subtot">
+					            </div>
+					          </div>
+					        </div>
+					     </div>  
+					     <table  class="table">
+					        <thead >
+					          <tr>
+					            <th scope="col">Kode Stock</th>
+					            <th scope="col">Nama Stock</th>
+					            <th scope="col">Qty</th>
+					            <th scope="col">Price</th>
+					            <th scope="col">Subtotal</th>
+					            <th scope="col">Aksi</th>
+					          </tr>
+					        </thead>
+					        <tbody  *ngIf="dataPoUi.length <= 0">
+					          <tr id="datakosong" >
+					            <td colspan="5" style="text-align: center; font-weight: bold;">Data Kosong</td>
+					          </tr>
+					        </tbody>
+					        <tbody *ngFor="let dd of dataPoUi; let ik = index;">
+
+					          <tr  *ngFor="let ddd of dd?.barang_po; let i = index;">
+					            <td >
+					              {{ddd.fc_kdstock}}  
+					            </td>
+					            <td >
+					              {{ddd.fv_namastock}}    
+					            </td>
+					            <td >
+					              {{ddd.qty}}
+					            </td>
+					            <td >
+					              {{ddd.price}}	
+					            </td>
+					            <td >
+					              {{ddd.subtotal}}
+					            </td>
+					            <td >
+					              <div class="hapus" (click)="hapusPo(ik)"><nb-icon icon="trash-2-outline"></nb-icon></div>
+					            </td>
+					        </tr>
+					        </tbody>
+					    </table> <br /><br />
+					     <div class="col-sm-4" style='text-align: right;'>
+					        <button type="button" class="btn btn-info btn-lg btn-block" (click)="simpanPO()" [nbSpinner]="simpanLoading" nbSpinnerStatus="danger" nbSpinnerSize="large" nbSpinnerMessage="Loading....">Simpan
+
+					        </button>
+					      </div>
+			      </nb-card-body>
+			    </nb-card>  	
+			  </div>	
+			</div>      	
+    	</nb-card-body>
+   <nb-card-footer>
+    <button nbButton (click)="hideModalUpdate()">Tutup</button>
+  </nb-card-footer>
+ </nb-card>
+</div>
+
+ <div [ngStyle]="showModalSupplier? {'opacity': '1'} :  {'opacity': '0', 'z-index' : '-1'}" class="c-modal-pelanggan">
+    <div class="modal">
+    		<div class="title">Pilih Supplier</div>
+			<div class="c-cari">
+		        <div style="padding-left: 0px;background: #f1f6ff;border-radius: 10px;">
+		          <input nbInput fullWidth (change)="cariSupplier()" [(ngModel)]="textCariSupplier" placeholder="Cari Supplier" style="width: 303%;">
+		        </div>
+		    </div>
+
+		    <div class="content">
+
+		        <div *ngFor="let pel of dataSupplierUi; let i = index;">
+		          <input type="radio" [id]="'P-' + pel.fc_kdsupp" [value]="pel" [(ngModel)]="supplierUi">
+		          <label [for]="'P-' + pel.fc_kdsupp">{{pel.fc_kdsupp}} - {{pel.fv_nama}} - {{pel.fv_alamat}}</label>
+		        </div>
+		    </div>
+		    <div class="button">
+		        <div (click)="modalBatal()">Batal</div>
+		        <div (click)="modalSupplierOk()">Ok</div>
+		    </div>
+
+    </div>
+  <div [ngStyle]="showModalSupplier? {'opacity': '1', 'z-index' : '4'} :  {'opacity': '0', 'z-index' : '-1'}" class="modal-pelanggan-backdrop" (click)="modalBatal()"></div>
+</div>
+
+ <div [ngStyle]="showModalBarang? {'opacity': '1'} :  {'opacity': '0', 'z-index' : '-1'}" class="c-modal-pelanggan">
+    <div class="modal">
+    		<div class="title">Pilih Barang</div>
+			<div class="c-cari">
+		        <div style="padding-left: 0px;background: #f1f6ff;border-radius: 10px;">
+		          <input nbInput fullWidth (change)="cariBarang()" [(ngModel)]="textCariBarang" placeholder="Cari Barang" style="width: 219%;">
+		        </div>
+		    </div>
+
+		    <div class="content">
+
+		        <div *ngFor="let pel of dataBarangUi; let i = index;">
+		          <input type="radio" [id]="'P-' + pel.fc_kdstock" [value]="pel" [(ngModel)]="barangUi">
+		          <label [for]="'P-' + pel.fc_kdstock">{{pel.fc_kdstock}} - {{pel.fv_namastock}} (<b>tipe</b> : {{pel.fv_nmtipe}}, <b>brand</b> : {{pel.fv_nmbrand}}, <b>group</b> : {{pel.fv_nmgroup}})</label>
+		        </div>
+		    </div>
+		    <div class="button">
+		        <div (click)="modalBatal()">Batal</div>
+		        <div (click)="modalBarangOk()">Ok</div>
+		    </div>
+
+    </div>
+  <div [ngStyle]="showModalBarang? {'opacity': '1', 'z-index' : '4'} :  {'opacity': '0', 'z-index' : '-1'}" class="modal-pelanggan-backdrop" (click)="modalBatal()"></div>
+</div>

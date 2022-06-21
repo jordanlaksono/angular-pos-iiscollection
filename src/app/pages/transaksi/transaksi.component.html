@@ -1,0 +1,140 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+      	<div class="row show-grid">
+      		<form [formGroup]="barangForm" (ngSubmit)="onSubmit()">
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <div class="col-md-12">
+	              		  <div class="form-group row">	
+		                      <label for="inputEmail1" class="label col-md-4 col-form-label">Pemasukan / Pengeluaran</label>
+		                      <div class="col-md-6">
+		                         <nb-select fullWidth placeholder="Pilih Cara Bayar" formControlName="jenisTransaksi" [(ngModel)]="jenisTransaksi">
+			                      <nb-option value="Pemasukan">Pemasukan</nb-option>
+			                      <nb-option value="Pengeluaran">Pengeluaran</nb-option>
+			                    </nb-select>
+		                      </div>
+		                  </div>
+	                  </div>  
+                 
+                      <div class="col-md-12" *ngIf="jenisTransaksi == 'Pemasukan'">
+                      	<div class="form-group row">
+	                      <label for="inputEmail1" class="label col-md-4 col-form-label">Nama Uraian</label>
+	                      <div class="col-md-8">
+	                        <nb-select fullWidth formControlName="jenisTransaksiPemasukan">
+		                      <nb-option value="null">-- Pilih Uraian --</nb-option>
+		                      <nb-option *ngFor="let k of dataPemasukan; let i = index" [value]="k.id_transaksi_akun">{{k.nama_transaksi_akun}}</nb-option>
+		                    </nb-select>
+	                      </div>
+	                    </div>
+	                </div>
+                    <div class="col-md-12" *ngIf="jenisTransaksi == 'Pengeluaran'">
+                    	<div class="form-group row">
+	                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Nama Uraian</label>
+	                      <div class="col-sm-8">
+	                        <nb-select fullWidth formControlName="jenisTransaksiPengeluaran">
+		                      <nb-option value="null">-- Pilih Uraian --</nb-option>
+		                      <nb-option *ngFor="let k of dataPengeluaran; let i = index" [value]="k.id_transaksi_akun">{{k.nama_transaksi_akun}}</nb-option>
+		                    </nb-select>
+	                      </div>
+	                    </div>
+	                </div>
+	                <div class="col-md-12">
+	              		  <div class="form-group row">
+		                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Jenis Keuangan</label>
+		                      <div class="col-sm-8">
+		                        <nb-select fullWidth placeholder="Pilih Cara Bayar" formControlName="jenisKeuangan">
+			                      <nb-option value="null">-- Pilih Keuangan --</nb-option>
+			                      <nb-option *ngFor="let k of dataBankUi; let i = index" [value]="k.kode_nama_keuangan">{{k.nama_keuangan}}</nb-option>
+			                    </nb-select>
+		                      </div>
+		                  </div>
+		            </div>
+                    <div class="col-md-12">
+	              		<div class="form-group row">
+	                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Total</label>
+	                      <div class="col-sm-8">
+	                        <input type="text" nbInput fullWidth id="inputEmail1" formControlName="total" autocomplete="off">
+	                      </div>
+	                    </div>
+	                </div>
+                    <div class="col-md-12">
+	              		<div class="form-group row">
+	                      <label for="inputEmail1" class="label col-sm-4 col-form-label">Keterangan</label>
+	                      <div class="col-sm-8">
+	                        <input type="text" nbInput fullWidth id="inputEmail1" formControlName="keterangan" autocomplete="off">
+	                      </div>
+	                    </div>
+	                </div>
+	                <div class="col-md-12">
+	              		<div class="form-group row">
+			                <label for="inputEmail1" class="label col-sm-4 col-form-label">Lampiran</label>
+			                <div class="col-sm-8">
+			                  <input type="file" id="image" (change)="onSelectedFile($event)" />
+			                  <div [innerHTML]="uploadError" class="error"></div>
+			                  <div *ngIf="imagePath">
+			                    <br />
+			                    <img [src]="imagePath" width="100px">
+			                  </div>
+			                </div>
+			            </div> 
+			        </div>
+			        <div class="col-md-12">
+	              		<div class="form-group row">
+			              <label for="inputEmail1" class="label col-sm-4 col-form-label"></label>
+			              <div class="col-sm-8">
+			              <button nbButton
+			                    status="success"
+			                    size="large"
+			                    [nbSpinner]="simpanLoading"
+			                    nbSpinnerStatus="danger"
+			                        >
+			                  Simpan
+			                  <div *ngIf="!simpanLoading">
+
+			                  </div>
+			                </button>
+			              </div>
+			          	</div>  
+			        </div>  
+			      </div>
+			     </div> 
+	        </form>      
+        </div>  
+
+         <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Nama Transaksi Akun</th>
+              <th>Nama Keuangan</th>
+              <th>Debit Transaksi Master</th>
+              <th>Kredit Transaksi Master</th>
+              <th>Keterangan</th>
+              <th>Lampiran</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="TransaksiAll?.length != 0">
+              <tr *ngFor="let t of TransaksiAll; let i = index">
+                  <td>{{ t.tanggal }}</td>
+                  <td>{{ t.nama_transaksi_akun }}</td>
+                  <td>{{ t.nama_keuangan }}</td>
+                  <td>{{ t.debit_transaksi_master }}</td>
+                  <td>{{ t.kredit_transaksi_master }}</td>
+                  <td>{{ t.keterangan_transaksi_master }}</td>
+                  <td>
+                    <img [src]="t.lampiran == '' || t.lampiran == null? 'http://127.0.0.1/viyon_backend/assets/images/no_image.jpg' : 'http://127.0.0.1/viyon_backend/assets/images/' + t.lampiran" style="width:200px;height: 90px;">
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="TransaksiAll?.length == 0">
+            <tr>
+              <td colspan="7" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>        
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>      	

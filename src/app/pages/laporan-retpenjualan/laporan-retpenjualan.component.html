@@ -1,0 +1,103 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Filter</nb-card-header>
+      <nb-card-body>
+        <form class="form-inline">
+          <div class="col-md-5"> 
+          	<input type="date" [(ngModel)]="tglAwal" name="tglAwal" nbInput fullWidth placeholder="Masukan Tanggal Awal"  >
+          </div>
+          <div class="col-md-5"> <input type="date" [(ngModel)]="tglAkhir" name="tglAkhir" nbInput fullWidth placeholder="Masukan Tanggal Akhir" ></div>
+
+          <div class="col-md-2"> <button (click)="cari()" nbButton status="primary">Filter</button></div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+
+        <br /><br />
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>No Faktur Return</th>
+              <th>No Faktur Penjualan</th>
+              <th>Tanggal</th>
+              <th>Nama Customer</th>
+              <th>Kota</th>
+              <th>Total</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="returnPenjualan?.length != 0">
+              <tr *ngFor="let retur of returnPenjualan; let i = index">
+                  <td>{{ retur.fc_noretur }}</td>
+                  <td>{{ retur.fc_nofaktur }}</td>
+                  <td>{{ retur.tanggal }}</td>
+                  <td>{{ retur.fv_nama }}</td>
+                  <td>{{ retur.fc_kota }}</td>
+                  <td>{{ retur.fm_total }}</td>
+                   <td >
+                    <span class="edit" >
+                      <button *ngIf="u" (click)="detailRetur(retur.fc_noretur)" title="" data-toggle="modal" data-target="#quick-view-modal" class="btn btn-success btn-sm">Detail Retur</button>
+                    </span>
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="returnPenjualan?.length == 0">
+            <tr>
+              <td colspan="6" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div *ngIf="openModalRetur"  style="position: absolute; top: 16vh; left: 21%; width: 76%; height: 43vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card [nbSpinner]="loading"
+  nbSpinnerStatus="danger"
+  nbSpinnerSize="large"
+  nbSpinnerMessage="Loading....." style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Rincian Barang</nb-card-header>
+		<nb-card-body style="padding: 1rem 0 0 0;">
+
+			<table datatable class="row-border hover" *ngIf="Rincian.length > 0">
+	          <thead >
+	            <tr>
+	              <th scope="col">Kode Barang</th>
+	              <th scope="col">Barang</th>
+	              <th scope="col">Tipe</th>
+	              <th scope="col">Brand</th>
+	              <th scope="col">Group</th>
+	              <th scope="col">Satuan</th>
+	              <th scope="col">Jumlah</th>
+	              <th scope="col">Subtotal</th>
+	            </tr>
+	          </thead>
+	          <tbody>
+	            <tr *ngFor="let rincian of Rincian; let i = index">
+	              <th scope="row">{{rincian.fc_kdstock}}</th>
+	              <td>{{rincian.fv_namastock}}</td>
+	              <td>{{rincian.fv_nmtipe}}</td>
+	              <td>{{rincian.fv_nmbrand}}</td>
+	              <td>{{rincian.fv_nmgroup}}</td>
+	              <td>{{rincian.fv_satuan}}</td>
+	              <td>{{rincian.fn_qtyretur}}</td>
+	              <td>{{rincian.fm_subtot}}</td>
+	             
+	            </tr>
+	          </tbody>
+	        </table>
+    	</nb-card-body>
+    <nb-card-footer>
+		<button nbButton (click)="hideModelRetur()">Tutup</button>
+	</nb-card-footer>
+  </nb-card>
+</div>

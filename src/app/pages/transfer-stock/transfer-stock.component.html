@@ -1,0 +1,295 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card class="inline-form-card">
+      <nb-card-header>Filter Tanggal</nb-card-header>
+      <nb-card-body>
+        <form class="form-inline">
+          <div class="col-md-5"> <input type="date" [(ngModel)]="tglAwal" name="tglAwal" nbInput fullWidth placeholder="Masukan Tanggal Awal"  ></div>
+          <div class="col-md-5"> <input type="date" [(ngModel)]="tglAkhir" name="tglAkhir" nbInput fullWidth placeholder="Masukan Tanggal Akhir" ></div>
+
+          <div class="col-md-2"> <button (click)="cari()" nbButton status="primary">Filter</button></div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+        <span class="edit" >
+          <button
+          *ngIf="c"
+          nbButton
+          (click)="openModalTransfer()"
+          >Tambah</button>
+        </span>
+        <br /><br />
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Kode Transfer</th>
+              <th>Date</th>
+              <th>Karyawan</th>
+              <th>Area</th>
+              <th>Divisi</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="transferstocks?.length != 0">
+              <tr *ngFor="let transferstock of transferstocks; let i = index">
+                  <td>{{ transferstock.fc_faktur_transfer }}</td>
+                  <td>{{ transferstock.tanggal }}</td>
+                  <td>{{ transferstock.fv_nama }}</td>
+                  <td>{{ transferstock.fv_nmarea }}</td>
+                  <td>{{ transferstock.fv_nmdivisi }}</td>
+                  <td >
+                    <span class="edit" >
+                      <button *ngIf="u" (click)="detailTransfer(transferstock.fc_faktur_transfer)" title="" data-toggle="modal" data-target="#quick-view-modal" class="btn btn-success btn-sm">Detail</button>
+                    </span>
+
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="transferstocks?.length == 0">
+            <tr>
+              <td colspan="7" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div *ngIf="isPopup"  style="position: absolute; top: 14vh; left: 1%; width: 98%; height: 83vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Form Input Transfer Stok</nb-card-header>
+		<nb-card-body >
+      <div class="col-lg-12">
+        <div class="col-md-12">
+          <div class="row show-grid">
+          <div class="col-md-6">
+          <div class="form-group row">
+            <label for="inputEmail1" class="label col-sm-3 col-form-label">Kode Transaksi</label>
+            <div class="col-sm-9">
+              <input type="text" nbInput fullWidth id="inputEmail1" placeholder="KodeTransaksi" [(ngModel)]="KodeTransfer" [value]="KodeTransfer" readonly>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail1" class="label col-sm-3 col-form-label">Tanggal</label>
+            <div class="col-sm-9">
+              <input type="date" nbInput fullWidth id="inputEmail1" placeholder="Tanggal" [(ngModel)]="fd_date"  autocomplete="off">
+            </div>
+          </div>
+
+
+          </div>
+          <div class="col-md-6">
+            <div class="form-group row">
+              <label for="inputEmail1" class="label col-sm-3 col-form-label">Karyawan</label>
+              <div class="col-sm-9">
+                <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Karyawan" [(ngModel)]="kode_karyawan" [value]="kode_karyawan" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail1" class="label col-sm-3 col-form-label">Periode</label>
+              <div class="col-sm-9">
+                <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Periode" [value]="tanggal" readonly>
+              </div>
+            </div>
+          </div>
+           </div>
+          </div>
+      <table  class="table">
+        <thead >
+          <tr>
+            <th scope="col">Kode Stock</th>
+            <th scope="col">Nama Stock</th>
+            <th scope="col">Area Tujuan</th>
+            <th scope="col">Divisi Tujuan</th>
+            <th scope="col">Jumlah Tujuan</th>
+            <th scope="col">Ket</th>
+            <th scope="col">Aksi</th>
+          </tr>
+        </thead>
+        <tbody  *ngIf="dataTransferUi.length <= 0">
+          <tr id="datakosong" >
+            <td colspan="8" style="text-align: center; font-weight: bold;">Data Kosong</td>
+          </tr>
+        </tbody>
+        <tbody *ngFor="let dd of dataTransferUi; let ik = index;">
+
+          <tr  *ngFor="let ddd of dd?.barang_transfer; let i = index;">
+            <td >
+                <input type='text' nbInput [(ngModel)]="ddd.fc_kdstock" style="color: #000;" />
+
+            </td>
+            <td >
+                <input type='text' nbInput [(ngModel)]="ddd.fv_namastock" />
+                <input type='hidden' nbInput [(ngModel)]="ddd.fc_kdtipe" />
+                <input type='hidden' nbInput [(ngModel)]="ddd.fc_kdbrand" />
+                <input type='hidden' nbInput [(ngModel)]="ddd.fc_kdgroup" />
+                <input type='hidden' nbInput [(ngModel)]="ddd.fc_kdsatuan" />
+            </td>
+            <td >
+              <!-- <input type='text' nbInput [(ngModel)]="ddd.fc_lokasi_area_tujuan" style="width: 6rem;"/> -->
+              <nb-select fullWidth placeholder="Pilih Area"  [(ngModel)]="ddd.fc_lokasi_area_tujuan">
+                <nb-option  *ngFor="let area of Area" value="{{area.fc_kdarea}}">{{area.fv_nmarea}}</nb-option>
+              </nb-select>
+            </td>
+            <td >
+              <!-- <input type='text' nbInput [(ngModel)]="ddd.fc_lokasi_divisi_tujuan" style="width: 6rem;"/> -->
+              <nb-select fullWidth placeholder="Pilih Divisi" [(ngModel)]="ddd.fc_lokasi_divisi_tujuan">
+                <nb-option *ngFor="let divisi of Divisi" value="{{divisi.fc_kddivisi}}">{{divisi.fv_nmdivisi}}</nb-option>
+              </nb-select>
+            </td>
+            <td >
+              <input type='text' nbInput [(ngModel)]="ddd.fn_jumlah_tujuan" style="width: 6rem;"/>
+            </td>
+            <td >
+              <input type='text' nbInput [(ngModel)]="ddd.fv_ket"/>
+            </td>
+            <td >
+              <div class="hapus" (click)="hapusBarang(ik)"><nb-icon icon="trash-2-outline"></nb-icon></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+      <table width="100%">
+          <tr >
+              <td width="60%"><button type="button" (click)="tambahTransfer()" class="btn btn-success pull-left"> Baris Baru</button>
+              </td>
+
+          </tr>
+
+      </table><br /><br />
+      <div class="col-sm-4" style='text-align: right;'>
+        <button type="button" class="btn btn-info btn-lg btn-block" (click)="simpanTransfer()" [nbSpinner]="simpanLoading" nbSpinnerStatus="danger" nbSpinnerSize="large" nbSpinnerMessage="Loading....">Simpan
+
+        </button>
+      </div>
+      </div>
+    </nb-card-body>
+   <nb-card-footer>
+    <button nbButton (click)="hideModalUpdate()">Tutup</button>
+  </nb-card-footer>
+ </nb-card>
+</div>
+
+<div *ngIf="showModalBarang"  style="position: absolute; top: 16vh; left: 21%; width: 50%; height: 70vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>List Barang</nb-card-header>
+		<nb-card-body style="padding: 1rem 0 0 0;">
+
+			<div class="c-cari">
+        <div style="padding-left: 0px;background: #f1f6ff;border-radius: 10px;">
+          <input nbInput fullWidth (change)="cariBarang()" [(ngModel)]="textCariBarang" placeholder="Cari Barang" style="width: 303%;">
+        </div>
+      </div>
+
+      <div class="content">
+
+        <div *ngFor="let pel of dataBarangUi; let i = index;">
+          <input type="radio" [id]="'P-' + pel.fc_kdstock" [value]="pel" (click)="modalBarangOk(i)">
+          <label [for]="'P-' + pel.fc_kdstock">{{pel.fc_kdstock}} - {{pel.fv_namastock}} (<b>tipe</b> : {{pel.fv_nmtipe}}, <b>brand</b> : {{pel.fv_nmbrand}}, <b>group</b> : {{pel.fv_nmgroup}})</label>
+        </div>
+      </div>
+      <!-- <div class="button">
+        <div (click)="modalBatal()">Batal</div>
+        <div >Ok</div>
+      </div> -->
+
+    </nb-card-body>
+    <nb-card-footer>
+			<button nbButton (click)="modalBarangTutup()">Tutup</button>
+		</nb-card-footer>
+  </nb-card>
+</div>
+
+<div *ngIf="openModalDetail"  style="position: absolute; top: 16vh; left: 21%; width: 76%; height: 65vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Detail Transfer</nb-card-header>
+    <nb-card-body style="padding: 1rem 0 0 0;">
+
+          <!-- <nb-list>
+            <nb-list-item> -->
+              <div class="col-md-12">
+                <div class="row show-grid">
+                  <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="inputEmail1" class="label col-sm-3 col-form-label">Kode Transaksi Transfer</label>
+                    <div class="col-sm-9">
+                      <input type="text" nbInput fullWidth id="inputEmail1" placeholder="" [(ngModel)]="fc_faktur_transfer2" readonly>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <label for="inputEmail1" class="label col-sm-3 col-form-label">Tanggal</label>
+                    <div class="col-sm-9">
+                      <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Tanggal" [(ngModel)]="fd_date2"  readonly>
+                    </div>
+                  </div>
+
+
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-3 col-form-label">Karyawan</label>
+                      <div class="col-sm-9">
+                        <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Karyawan" [(ngModel)]="fv_nama2" readonly>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail1" class="label col-sm-3 col-form-label">Periode</label>
+                      <div class="col-sm-9">
+                        <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Periode" [value]="fc_periode2" readonly>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <table  class="table">
+                <thead >
+                  <tr>
+                    <th scope="col">Kode Stock</th>
+                    <th scope="col">Nama Stock</th>
+                    <th scope="col">Area Tujuan</th>
+                    <th scope="col">Divisi Tujuan</th>
+                    <th scope="col">Jumlah Tujuan</th>
+                    <th scope="col">Ket</th>
+                  </tr>
+                </thead>
+                <tbody >
+
+                  <tr *ngFor="let dd of dataDetTransferUi; let ik = index;">
+                    <td >
+                        {{dd.fc_kdstock}}
+
+                    </td>
+                    <td >
+                        {{dd.fv_namastock}}
+                    </td>
+                    <td >
+                        {{dd.fv_nmarea}}
+                    </td>
+                    <td >
+                        {{dd.fv_nmdivisi}}
+                    </td>
+                    <td >
+                        {{dd.fn_jumlah_tujuan}}
+                    </td>
+                    <td >
+                        {{dd.fv_ket}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!-- </nb-list-item>
+          </nb-list> -->
+    </nb-card-body>
+    <nb-card-footer>
+      <button nbButton (click)="hideModelDetail()">Tutup</button>
+    </nb-card-footer>
+  </nb-card>
+</div>

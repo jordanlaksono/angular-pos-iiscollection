@@ -1,0 +1,189 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+        <span class="edit" >
+          <button
+          *ngIf="c"
+          nbButton
+          (click)="openModalBrand()"
+          >Tambah</button>
+        </span>
+        <!-- <span class="edit" >
+          <button
+          nbButton
+          (click)="rerender()"
+          >Rerender</button>
+        </span> -->
+        <br /><br />
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Kode Brand</th>
+              <th>Brand</th>
+              <th>Hold</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="brands?.length != 0">
+              <tr *ngFor="let brand of brands; let i = index">
+                  <td>{{ brand.fc_kdbrand }}</td>
+                  <td>{{ brand.fv_nmbrand }}</td>
+                  <td>
+                    <p *ngIf="brand.fc_hold =='Y'" ><button type="button" class="btn btn-success btn-sm">Hold</button></p>
+                    <p *ngIf="brand.fc_hold =='N'" ><button type="button" class="btn btn-danger btn-sm">No Hold</button></p>
+                  </td>
+                  <td >
+                    <span class="edit" >
+                      <button *ngIf="u" (click)="editBrand(brand.fc_kdbrand)" title="" data-toggle="modal" data-target="#quick-view-modal" class="btn btn-success btn-sm">Edit</button>
+                    </span>
+                    <span class="delete">
+                      <button *ngIf="d" (click)="DeleteBrand(brand.fc_kdbrand)" type="button" class="btn btn-danger btn-sm">Delete</button>
+                    </span>
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="brands?.length == 0">
+            <tr>
+              <td colspan="4" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div *ngIf="isPopup"  style="position: absolute; top: 16vh; left: 21%; width: 76%; height: 50vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card [nbSpinner]="loading"
+  nbSpinnerStatus="danger"
+  nbSpinnerSize="large"
+  nbSpinnerMessage="Loading....."
+   style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Form Input Brand</nb-card-header>
+		<nb-card-body style="padding: 1rem 0 0 0;">
+
+					<!-- <nb-list>
+            <nb-list-item> -->
+
+              <div class="col-md-12">
+              <div class="row show-grid">
+              <div class="col-md-6">
+              <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-3 col-form-label">Kode Brand</label>
+                <div class="col-sm-9">
+                  <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Kode Brand" [(ngModel)]="fc_kdbrand" >
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-3 col-form-label">Hold</label>
+                <div class="col-sm-9">
+                  <nb-select fullWidth placeholder="Pilih Status" [(ngModel)]="fc_hold">
+                    <nb-option value="Y">Hold</nb-option>
+                    <nb-option value="N">No Hold</nb-option>
+                  </nb-select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                <button nbButton
+                    type="button"
+                    (click)="simpan()"
+                    status="success"
+                    size="large"
+                    [nbSpinner]="simpanLoading"
+                    nbSpinnerStatus="danger"
+                        >
+                  Simpan
+                  <div *ngIf="!simpanLoading">
+
+                  </div>
+                </button>
+                </div>
+              </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label">Nama Brand</label>
+                  <div class="col-sm-9">
+                    <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Nama Brand" [(ngModel)]="fv_nmbrand" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+               </div>
+              </div>
+						<!-- </nb-list-item>
+          </nb-list> -->
+
+    </nb-card-body>
+    <nb-card-footer>
+			<button nbButton (click)="hideModalUpdate()">Tutup</button>
+		</nb-card-footer>
+  </nb-card>
+</div>
+<div *ngIf="openModalUpdate "  style="position: absolute; top: 16vh; left: 21%; width: 76%; height: 50vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card [nbSpinner]="loading"
+  nbSpinnerStatus="danger"
+  nbSpinnerSize="large"
+  nbSpinnerMessage="Loading....." style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Form Update Brand</nb-card-header>
+		<nb-card-body style="padding: 1rem 0 0 0;">
+
+					<!-- <nb-list>
+            <nb-list-item> -->
+              <div class="col-md-12">
+                <div class="row show-grid">
+                <div class="col-md-6">
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label">Kode Brand</label>
+                  <div class="col-sm-9">
+                    <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Kode Brand" [(ngModel)]="fc_kdbrand2" readonly>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label">Hold</label>
+                  <div class="col-sm-9">
+                    <nb-select fullWidth placeholder="Pilih Status" [(ngModel)]="fc_hold2">
+                      <nb-option value="Y">Hold</nb-option>
+                      <nb-option value="N">No Hold</nb-option>
+                    </nb-select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label"></label>
+                  <div class="col-sm-9">
+                  <button nbButton
+                      type="button"
+                      (click)="update()"
+                      status="success"
+                      size="large"
+                      [nbSpinner]="simpanLoading"
+                      nbSpinnerStatus="danger"
+                          >
+                    Update
+                    <div *ngIf="!simpanLoading">
+
+                    </div>
+                  </button>
+                  </div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="inputEmail1" class="label col-sm-3 col-form-label">Nama Brand</label>
+                    <div class="col-sm-9">
+                      <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Nama Brand" [(ngModel)]="fv_nmbrand2" autocomplete="off">
+                    </div>
+                  </div>
+
+                </div>
+                 </div>
+                </div>
+            <!-- </nb-list-item>
+          </nb-list> -->
+    </nb-card-body>
+    <nb-card-footer>
+			<button nbButton (click)="hideModelUpdate()">Tutup</button>
+		</nb-card-footer>
+  </nb-card>
+</div>

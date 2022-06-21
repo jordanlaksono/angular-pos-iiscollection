@@ -1,0 +1,30 @@
+/* Revert DataTables styles, as Materialize override some default styles... */
+
+.dataTables_wrapper label {
+  font-size: 1rem;
+  color: #000;
+}
+
+.dataTables_wrapper select {
+  display: inline;
+  border: 1px solid #000;
+  border-radius: 0;
+  padding: 0;
+  width: inherit;
+  height: inherit;
+}
+
+.dataTables_wrapper .dataTables_filter input[type="search"] {
+  border: 1px solid #000;
+  height: inherit;
+  width: inherit;
+  font-size: inherit;
+  margin: 0 0 0 0.5em;
+  display: inline-block;
+  background-color: #FFF;
+  visibility: visible !important;
+}
+
+.dataTables_empty {
+    display: none;
+}

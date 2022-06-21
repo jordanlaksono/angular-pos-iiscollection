@@ -1,0 +1,170 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+        <span class="edit" >
+          <button
+          *ngIf="c"
+          nbButton
+          (click)="openModalWilayah()"
+          >Tambah</button>
+        </span>
+        <!-- <span class="edit" >
+          <button
+          nbButton
+          (click)="rerender()"
+          >Rerender</button>
+        </span> -->
+        <br /><br />
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Kode Wilayah</th>
+              <th>Wilayah</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="wilayahs?.length != 0">
+              <tr *ngFor="let wilayah of wilayahs; let i = index">
+                  <td>{{ wilayah.fc_kdwilayah }}</td>
+                  <td>{{ wilayah.fv_nmwilayah }}</td>
+                  <td >
+                    <span class="edit" >
+                      <button *ngIf="u" (click)="editWilayah(wilayah.fc_kdwilayah)" title="" data-toggle="modal" data-target="#quick-view-modal" class="btn btn-success btn-sm">Edit</button>
+                    </span>
+                    <span class="delete">
+                      <button *ngIf="d" (click)="DeleteWilayah(wilayah.fc_kdwilayah)" type="button" class="btn btn-danger btn-sm">Delete</button>
+                    </span>
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="wilayahs?.length == 0">
+            <tr>
+              <td colspan="3" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div *ngIf="isPopup"  style="position: absolute; top: 16vh; left: 21%; width: 76%; height: 57vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card [nbSpinner]="loading"
+  nbSpinnerStatus="danger"
+  nbSpinnerSize="large"
+  nbSpinnerMessage="Loading....."
+   style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Form Input Wilayah</nb-card-header>
+		<nb-card-body style="padding: 1rem 0 0 0;">
+
+					<!-- <nb-list>
+            <nb-list-item> -->
+
+              <div class="col-md-12">
+              <div class="row show-grid">
+              <div class="col-md-6">
+              <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-3 col-form-label">Kode Wilayah</label>
+                <div class="col-sm-9">
+                  <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Kode Top" [(ngModel)]="KodeWilayah" [value]="KodeWilayah">
+                </div>
+              </div>
+
+
+              <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                <button nbButton
+                    type="button"
+                    (click)="simpan()"
+                    status="success"
+                    size="large"
+                    [nbSpinner]="simpanLoading"
+                    nbSpinnerStatus="danger"
+                        >
+                  Simpan
+                  <div *ngIf="!simpanLoading">
+
+                  </div>
+                </button>
+                </div>
+              </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label">Wilayah</label>
+                  <div class="col-sm-9">
+                    <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Wilayah" [(ngModel)]="fv_nmwilayah" autocomplete="off">
+                  </div>
+                </div>
+
+              </div>
+               </div>
+              </div>
+						<!-- </nb-list-item>
+          </nb-list> -->
+
+    </nb-card-body>
+    <nb-card-footer>
+			<button nbButton (click)="hideModalUpdate()">Tutup</button>
+		</nb-card-footer>
+  </nb-card>
+</div>
+<div *ngIf="openModalUpdate "  style="position: absolute; top: 16vh; left: 21%; width: 76%; height: 57vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card [nbSpinner]="loading"
+  nbSpinnerStatus="danger"
+  nbSpinnerSize="large"
+  nbSpinnerMessage="Loading....." style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Form Update Wilayah</nb-card-header>
+		<nb-card-body style="padding: 1rem 0 0 0;">
+
+					<!-- <nb-list>
+            <nb-list-item> -->
+              <div class="col-md-12">
+                <div class="row show-grid">
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="inputEmail1" class="label col-sm-3 col-form-label">Kode Wilayah</label>
+                    <div class="col-sm-9">
+                      <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Kode Wilayah" [(ngModel)]="fc_kdwilayah2" >
+                    </div>
+                  </div>
+
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label"></label>
+                  <div class="col-sm-9">
+                  <button nbButton
+                      type="button"
+                      (click)="update()"
+                      status="success"
+                      size="large"
+                      [nbSpinner]="simpanLoading"
+                      nbSpinnerStatus="danger"
+                          >
+                    Update
+                    <div *ngIf="!simpanLoading">
+
+                    </div>
+                  </button>
+                  </div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="inputEmail1" class="label col-sm-3 col-form-label">Wilayah</label>
+                    <div class="col-sm-9">
+                      <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Wilayah" [(ngModel)]="fv_nmwilayah2" autocomplete="off">
+                    </div>
+                  </div>
+
+                </div>
+                 </div>
+                </div>
+            <!-- </nb-list-item>
+          </nb-list> -->
+    </nb-card-body>
+    <nb-card-footer>
+			<button nbButton (click)="hideModelUpdate()">Tutup</button>
+		</nb-card-footer>
+  </nb-card>
+</div>

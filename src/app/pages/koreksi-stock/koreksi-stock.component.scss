@@ -1,0 +1,74 @@
+.no-data-available {
+  text-align: center;
+}
+
+
+.c-cari{
+  padding: 10px 10px 0 10px;
+  display: flex;
+
+  .tambah-pelanggan{
+    padding: 0px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #488aff;
+    border-radius: 10px;
+    margin-left: 10px;
+    color: white;
+    font-size: 16pt;
+
+    &:active{
+      opacity: .5;
+    }
+  }
+
+  ion-item{
+    padding-left: 0px;
+    background: #f1f6ff;
+    border-radius: 10px;
+
+    .item-inner{
+      box-shadow: none !important;
+      border-bottom: none !important;
+    }
+  }
+}
+
+.content{
+  padding: 10px;
+  overflow: scroll;
+  flex: 1;
+
+  div{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+
+    label{
+      margin-left: 10px;
+      font-weight: bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+
+  }
+}
+
+.button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid #dedede;
+  color: #488aff;
+  font-weight: bold;
+  text-align: center;
+
+  div{
+    flex: 1;
+    padding: 10px;
+  }
+}

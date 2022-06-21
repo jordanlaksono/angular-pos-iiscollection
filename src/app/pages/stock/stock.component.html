@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+
+        <br /><br />
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Kode Barang</th>
+              <th>Barcode</th>
+              <th>Nama Barang</th>
+              <th>Tipe</th>
+              <th>Brand</th>
+              <th>Group</th>
+              <th>Satuan</th>
+              <th>Qty</th>
+              <th>Area</th>
+              <th>Divisi</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="stocks?.length != 0">
+              <tr *ngFor="let stock of stocks; let i = index">
+                  <td>{{ stock.fc_kdstock }}</td>
+                  <td>{{ stock.fc_barcode }}</td>
+                  <td>{{ stock.fv_namastock }}</td>
+                  <td>{{ stock.fv_nmtipe }}</td>
+                  <td>{{ stock.fv_nmbrand }}</td>
+                  <td>{{ stock.fv_nmgroup }}</td>
+                  <td>{{ stock.fv_satuan }}</td>
+                  <td>{{ stock.fn_qty }}</td>
+                  <td>{{ stock.fv_nmarea }}</td>
+                  <td>{{ stock.fv_nmdivisi }}</td>
+
+              </tr>
+          </tbody>
+          <tbody *ngIf="stocks?.length == 0">
+            <tr>
+              <td colspan="10" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>

@@ -1,0 +1,189 @@
+<div class="row">
+  <div class="col-lg-12">
+    <nb-card>
+      <nb-card-body>
+        <span class="edit" >
+          <button
+          *ngIf="c"
+          nbButton
+          (click)="openModalSatuan()"
+          >Tambah</button>
+        </span>
+        <!-- <span class="edit" >
+          <button
+          nbButton
+          (click)="rerender()"
+          >Rerender</button>
+        </span> -->
+        <br /><br />
+        <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover">
+          <thead>
+            <tr>
+              <th>Kode Satuan</th>
+              <th>Satuan</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="satuans?.length != 0">
+              <tr *ngFor="let satuan of satuans; let i = index">
+                  <td>{{ satuan.fc_kdsatuan }}</td>
+                  <td>{{ satuan.fv_satuan }}</td>
+                  <td>
+                    <p *ngIf="satuan.fc_sts =='Y'" ><button type="button" class="btn btn-success btn-sm">Aktif</button></p>
+                    <p *ngIf="satuan.fc_sts =='N'" ><button type="button" class="btn btn-danger btn-sm">Non Aktif</button></p>
+                  </td>
+                  <td >
+                    <span class="edit" >
+                      <button *ngIf="u" (click)="editSatuan(satuan.fc_kdsatuan)" title="" data-toggle="modal" data-target="#quick-view-modal" class="btn btn-success btn-sm">Edit</button>
+                    </span>
+                    <span class="delete">
+                      <button *ngIf="d" (click)="DeleteSatuan(satuan.fc_kdsatuan)" type="button" class="btn btn-danger btn-sm">Delete</button>
+                    </span>
+                  </td>
+              </tr>
+          </tbody>
+          <tbody *ngIf="satuans?.length == 0">
+            <tr>
+              <td colspan="4" class="no-data-available">No data!</td>
+            </tr>
+          <tbody>
+        </table>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div *ngIf="isPopup"  style="position: absolute; top: 16vh; left: 21%; width: 76%; height: 50vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card [nbSpinner]="loading"
+  nbSpinnerStatus="danger"
+  nbSpinnerSize="large"
+  nbSpinnerMessage="Loading....."
+   style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Form Input Satuan</nb-card-header>
+		<nb-card-body style="padding: 1rem 0 0 0;">
+
+					<!-- <nb-list>
+            <nb-list-item> -->
+
+              <div class="col-md-12">
+              <div class="row show-grid">
+              <div class="col-md-6">
+              <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-3 col-form-label">Kode Satuan</label>
+                <div class="col-sm-9">
+                  <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Kode Satuan" [(ngModel)]="KodeSatuan" readonly>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-3 col-form-label">Status</label>
+                <div class="col-sm-9">
+                  <nb-select fullWidth placeholder="Pilih Status" [(ngModel)]="fc_sts">
+                    <nb-option value="Y">Aktif</nb-option>
+                    <nb-option value="N">Non Aktif</nb-option>
+                  </nb-select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                <button nbButton
+                    type="button"
+                    (click)="simpan()"
+                    status="success"
+                    size="large"
+                    [nbSpinner]="simpanLoading"
+                    nbSpinnerStatus="danger"
+                        >
+                  Simpan
+                  <div *ngIf="!simpanLoading">
+
+                  </div>
+                </button>
+                </div>
+              </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label">Satuan</label>
+                  <div class="col-sm-9">
+                    <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Nama Satuan" [(ngModel)]="fv_satuan" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+               </div>
+              </div>
+						<!-- </nb-list-item>
+          </nb-list> -->
+
+    </nb-card-body>
+    <nb-card-footer>
+			<button nbButton (click)="hideModalUpdate()">Tutup</button>
+		</nb-card-footer>
+  </nb-card>
+</div>
+<div *ngIf="openModalUpdate "  style="position: absolute; top: 16vh; left: 21%; width: 76%; height: 50vh; display: flex; align-items: center; justify-content: center; z-index: 1002;">
+  <nb-card [nbSpinner]="loading"
+  nbSpinnerStatus="danger"
+  nbSpinnerSize="large"
+  nbSpinnerMessage="Loading....." style="width: 100%; height: 100%; overflow: hidden; margin: 0;">
+    <nb-card-header>Form Update Brand</nb-card-header>
+		<nb-card-body style="padding: 1rem 0 0 0;">
+
+					<!-- <nb-list>
+            <nb-list-item> -->
+              <div class="col-md-12">
+                <div class="row show-grid">
+                <div class="col-md-6">
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label">Kode Satuan</label>
+                  <div class="col-sm-9">
+                    <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Kode Satuan" [(ngModel)]="fc_kdsatuan2" readonly>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label">Satuan</label>
+                  <div class="col-sm-9">
+                    <nb-select fullWidth placeholder="Pilih Status" [(ngModel)]="fc_sts2">
+                      <nb-option value="Y">Aktif</nb-option>
+                      <nb-option value="N">Non Aktif</nb-option>
+                    </nb-select>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="inputEmail1" class="label col-sm-3 col-form-label"></label>
+                  <div class="col-sm-9">
+                  <button nbButton
+                      type="button"
+                      (click)="update()"
+                      status="success"
+                      size="large"
+                      [nbSpinner]="simpanLoading"
+                      nbSpinnerStatus="danger"
+                          >
+                    Update
+                    <div *ngIf="!simpanLoading">
+
+                    </div>
+                  </button>
+                  </div>
+                </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group row">
+                    <label for="inputEmail1" class="label col-sm-3 col-form-label">Satuan</label>
+                    <div class="col-sm-9">
+                      <input type="text" nbInput fullWidth id="inputEmail1" placeholder="Satuan" [(ngModel)]="fv_satuan2" autocomplete="off">
+                    </div>
+                  </div>
+
+                </div>
+                 </div>
+                </div>
+            <!-- </nb-list-item>
+          </nb-list> -->
+    </nb-card-body>
+    <nb-card-footer>
+			<button nbButton (click)="hideModelUpdate()">Tutup</button>
+		</nb-card-footer>
+  </nb-card>
+</div>

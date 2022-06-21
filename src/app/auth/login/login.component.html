@@ -1,0 +1,52 @@
+<h1 id="title" class="title">Sign In</h1>
+<!-- <ng-flash-message></ng-flash-message> -->
+<form [formGroup]="signinForm" (ngSubmit)="loginUser()" aria-labelledby="title">
+  <div class="form-control-group">
+      <label class="label" for="input-email">Username:</label>
+      <input type="text"
+            nbInput
+            fullWidth
+            placeholder="Username"
+            formControlName="email"
+           >
+  </div>
+  <div class="form-control-group">
+      <label class="label" for="input-email">Password:</label>
+      <input type="password"
+            nbInput
+            fullWidth
+            placeholder="Password"
+            formControlName="password"
+            >
+  </div>
+  <div class="form-control-group">
+    <label class="label" for="input-email">Area:</label>
+    <nb-select fullWidth placeholder="Pilih Area"  formControlName="area">
+      <nb-option  *ngFor="let area of Area" value="{{area.fc_kdarea}}">{{area.fv_nmarea}}</nb-option>
+    </nb-select>
+  </div>
+  <div class="form-control-group">
+    <label class="label" for="input-email">Divisi:</label>
+    <nb-select fullWidth placeholder="Pilih Divisi"  formControlName="divisi">
+      <nb-option *ngFor="let divisi of Divisi" value="{{divisi.fc_kddivisi}}">{{divisi.fv_nmdivisi}}</nb-option>
+    </nb-select>
+  </div>
+
+  <!-- <div class="form-control-group accept-group">
+      <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe" *ngIf="rememberMe">Remember me</nb-checkbox>
+      <a class="forgot-password" routerLink="../request-password">Forgot Password?</a>
+    </div> -->
+
+    <button nbButton
+            class="btn btn-info btn-lg btn-block"
+            type="submit"
+            [nbSpinner]="simpanLoading"
+            nbSpinnerStatus="danger"
+            >
+            Sign In
+    <div *ngIf="!simpanLoading">
+
+    </div>
+    </button>
+</form>
+
